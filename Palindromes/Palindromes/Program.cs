@@ -10,11 +10,14 @@ namespace Palindromes
     {
         static void Main(string[] args)
         {
-            string str1 = "test string", str2 = "Madam, in Eden I'm Adam", str3 = "acbacb";
-            Console.WriteLine("Word: {0}, IsPalindrome {1}", str1, str1.IsPalindrome());
-            Console.WriteLine("Word: {0}, IsPalindrome {1}", str2, str2.IsPalindrome());
+            string str1 = "", str2 = "oyotta", str3 = "cecarar";
+            string str4 = "bbb", str5 = "babbb";
 
+            Console.WriteLine("Word: {0}, IsPalindrome {1}", str1, str1.GeneratePalindrome());
+            Console.WriteLine("Word: {0}, IsPalindrome {1}", str2, str2.GeneratePalindrome());
             Console.WriteLine("Word: {0}, IsPalindrome {1}", str3, str3.GeneratePalindrome());
+            Console.WriteLine("Word: {0}, IsPalindrome {1}", str4, str4.GeneratePalindrome());
+            Console.WriteLine("Word: {0}, IsPalindrome {1}", str5, str5.GeneratePalindrome());
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadLine();
@@ -45,7 +48,7 @@ namespace Palindromes
 
             //sort the string into a dictonary (java hashset) to make processing the string easier
             var dict = new Dictionary<char, int>();
-            foreach (char c in StrToCheck.ToCharArray())
+            foreach (char c in StrToCheck.ToLower().ToCharArray())
             {
                 if (char.IsLetter(c))
                 {
@@ -66,16 +69,24 @@ namespace Palindromes
             StringBuilder sb = new StringBuilder(); 
             foreach (var keyPair in dict)
             {
-                // If we have more than one odd set of charecters it won't be possible to build a palidrome 
-                if (keyPair.Value % 2 != 0 && numberOfOdds >= 1)
+                bool isOdd = false;
+                // If we have more than one odd set of characters it won't be possible to build a palindrome
+                if (keyPair.Value % 2 != 0)
                 {
+                    isOdd = true;
                     numberOfOdds++;
+                }
+
+                if (numberOfOdds < 2)
+                {
+      
                     bool insertFront = true;
                     for (int i = 0; i < keyPair.Value; i++)
                     {
                         //If we have more values, insert in the front/or rear as needed. 
                         if (i < keyPair.Value - 1)
                         {
+                            
                             if (insertFront == true)
                             {
                                 sb.Insert(0, keyPair.Key);
@@ -89,8 +100,26 @@ namespace Palindromes
                         }
                         else
                         {
-                            // This is the last value, put it in the middle of the string we are building up 
-                            sb.Insert(sb.Length / 2, keyPair.Key);
+                            // this is the last value for our odd pair, put it in the
+                            // middle
+                            if (isOdd)
+                            {
+                                sb.Insert(sb.Length / 2, keyPair.Key);
+                            }
+                            else
+                            {
+                                // follow the normal pattern
+                                if (insertFront == true)
+                                {
+                                    sb.Insert(0, keyPair.Key);
+                                    insertFront = false;
+                                }
+                                else
+                                {
+                                    sb.Append(keyPair.Key);
+                                    insertFront = true;
+                                }
+                            }
                         }
                         
                     }
